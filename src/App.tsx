@@ -33,7 +33,9 @@ function App() {
 
   const goToPayment = async () => {
     setIsLoading(true);
-    const rawUrl = await gqr.createPayment(customerName, amount.toString());
+    const commision = 0.05;
+    const totalAmount = amount + (amount * commision);
+    const rawUrl = await gqr.createPayment(customerName, totalAmount.toString());
     setUrl(rawUrl);
   }
   
