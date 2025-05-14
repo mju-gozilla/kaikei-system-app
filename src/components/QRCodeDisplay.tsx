@@ -1,12 +1,13 @@
 import React from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { ArrowLeft, RefreshCw } from 'lucide-react';
+import { ArrowLeft, RefreshCw, ClipboardCopy } from 'lucide-react';
 import { formatDateToJapanese } from '../utils/formatters';
 import { PaymentData } from '../types';
 
 interface QRCodeDisplayProps {
   url: string;
-  paymentData: PaymentData
+  paymentData: PaymentData;
+  commissionPercentage: number;
   onBack: () => void;
   onRestart: () => void;
 }
@@ -14,6 +15,7 @@ interface QRCodeDisplayProps {
 const QRCodeDisplay: React.FC<QRCodeDisplayProps> = ({
   url,
   paymentData,
+  commissionPercentage,
   onBack,
   onRestart,
 }) => {
@@ -36,8 +38,16 @@ const QRCodeDisplay: React.FC<QRCodeDisplayProps> = ({
               className="mx-auto"
             />
           </div>
+
+          <button
+            onClick={() => navigator.clipboard.writeText(url)}
+            className="flex items-center justify-center px-4 py-2 bg-green-500 text-white rounded-lg font-medium transition-colors hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 mb-4"
+          >
+            <ClipboardCopy className="mr-2 h-5 w-5" />
+            決済リンクをコピー
+          </button>
           
-          <div className="w-full space-y-3 text-center">
+          <div className="w-full mt-6 space-y-3 text-center">
             <div className="flex justify-between items-center border-b border-gray-200 pb-2">
               <span className="text-gray-600">顧客名:</span>
               <span className="font-medium">{paymentData.customerName}</span>
@@ -45,7 +55,7 @@ const QRCodeDisplay: React.FC<QRCodeDisplayProps> = ({
             
             <div className="flex justify-between items-center border-b border-gray-200 pb-2">
               <span className="text-gray-600">金額:</span>
-              <span className="font-medium">¥{formatNumberWithCommas((paymentData.amount*0.05) + paymentData.amount)}</span>
+              <span className="font-medium">¥{formatNumberWithCommas((paymentData.amount*commissionPercentage) + paymentData.amount)}</span>
             </div>
             
             <div className="flex justify-between items-center pb-2">

@@ -15,6 +15,7 @@ function App() {
   const [amount, setAmount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLocked, setIsLocked] = useState<boolean>(true);
+  const commisionPercentage = import.meta.env.VITE_COMMISION_PERCENTAGE;
   const gqr = generateQR();
   
   const paymentData: PaymentData = {
@@ -33,8 +34,7 @@ function App() {
 
   const goToPayment = async () => {
     setIsLoading(true);
-    const commision = 0.05;
-    const totalAmount = amount + (amount * commision);
+    const totalAmount = amount + (amount * commisionPercentage);
     const rawUrl = await gqr.createPayment(customerName, totalAmount.toString());
     setUrl(rawUrl);
   }
@@ -100,6 +100,7 @@ function App() {
           {currentStep === 'qr-code' && (
             <QRCodeDisplay
               url={url}
+              commissionPercentage={commisionPercentage}
               paymentData={paymentData}
               onBack={goToPreviousStep}
               onRestart={resetForm}
